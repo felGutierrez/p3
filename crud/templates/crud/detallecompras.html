@@ -1,0 +1,32 @@
+{% extends "crud/base2.html" %}
+{% load static %}
+
+{% block contenido %}
+
+<div class="p-4">
+    <h1>Detalle de Compras</h1>
+</div>
+<div class="table-responsive p-4">
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Fecha de Compra</th>
+                <th scope="col">Total</th>
+                <th scope="col">Detalles</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for registro in registros %}
+            <tr>
+                <td>{{ registro.fecha_compra }}</td>
+                <td>{{ registro.total }}</td>
+                <td>
+                    <a href="{% url 'detalle_registro' registro.id %}" class="btn btn-info btn-sm">Ver Detalles</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock contenido %}

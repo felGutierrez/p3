@@ -1,0 +1,150 @@
+{% extends "crud/base2.html" %}
+{% load custom_filter %}
+{% load static %}
+
+
+{% block contenido %}
+<div class="container mt-3">
+  <div class="row g-5">
+    <div class="col-md-5 col-lg-4 order-md-last">
+      <h4 class="d-flex justify-content-between align-items-center mb-3">
+        <span class="text-primary">Tu carrito</span>
+      </h4>
+      <ul class="list-group mb-3">
+        {% for item in items %}
+        <li class="list-group-item d-flex justify-content-between lh-sm">
+          <div>
+            <h6 class="my-0">{{ item.producto.nombre }}</h6>
+            <small class="text-body-secondary">{{ item.cantidad }}</small>
+          </div>
+          <span class="text-body-secondary">{{ item.cantidad|mul:item.producto.precio }}</span>
+        </li>
+        {% endfor %}
+        <li class="list-group-item d-flex justify-content-between">
+          <span>Total</span>
+          <strong>${{ carrito.total }}</strong>
+        </li>
+
+
+        <hr class="my-4">
+        <div class="p-3 bg-success text-light rounded shadow">
+          <p>Valor dolar:</p>
+          <div class="spinner">
+            <span class="spinner-grow spinner-grow-sm"></span>
+            Cargando..
+          </div>
+          <h4 id="dolar"></h4>
+        </div>
+        <hr class="my-2">
+        <div class="p-3 bg-primary text-light rounded shadow">
+          <p>Valor Euro:</p>
+          <div class="spinner">
+            <span class="spinner-grow spinner-grow-sm"></span>
+            Cargando..
+          </div>
+          <h4 id="euro"></h4>
+        </div>
+      </ul>
+    </div>
+
+    <div class="col-md-7 col-lg-8">
+      <h4 class="mb-3">Datos de Facturacion</h4>
+      <form id="formulario_pagar_s" method="post" action="{% url 'confirma' id=carrito.id %}">
+        {% csrf_token %}
+        <div class="row g-3">
+
+          <div class="col-sm-6">
+            <label for="rut" class="form-label">Rut</label>
+            <input type="text" class="form-control" id="rut"  name="rut" value="{{pagar.rut}}">
+          </div>
+
+          <div class="col-sm-6">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="nombre"  name="nombre" value="{{pagar.first_name}}">
+          </div>
+
+          <div class="col-sm-6">
+            <label for="lastName" class="form-label">Apellido</label>
+            <input type="text" class="form-control" id="lastName"   name="lastName" value="{{pagar.last_name}}">
+          </div>
+
+          <div class="col-sm-6">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email"   name="email" value="{{pagar.email}}">
+          </div>
+
+          <div class="col-12">
+            <label for="address" class="form-label">Direccion</label>
+            <input type="text" class="form-control" id="address"   name="address" value="{{pagar.direccion}}">
+          </div>
+
+          <div class="col-md-6">
+            <label for="zip" class="form-label">Codigo Postal</label>
+            <input type="text" class="form-control" id="zip"  name="zip"  value="{{pagar.postal}}">
+          </div>
+          <div class="col-md-6">
+            <label for="idcelular" class="form-label">Celular</label>
+            <input type="number" class="form-control" id="idcelular"   name="idcelular" value="{{pagar.celular}}">
+          </div>
+
+          <hr class="my-4">
+          
+          <h4 class="mb-3">Metodo de pago</h4>
+
+          <div class="my-3">
+            <div class="form-check">
+              <input id="credito" name="paymentMethod" type="radio" class="form-check-input" checked>
+              <label class="form-check-label" for="credito">Tarjeta de Credito</label>
+            </div>
+            <div class="form-check">
+              <input id="debito" name="paymentMethod" type="radio" class="form-check-input">
+              <label class="form-check-label" for="debito">Tarjeta de debito</label>
+            </div>
+          </div>
+
+          <div class="row gy-3">
+            <div class="col-md-6">
+              <label for="idnombtarjeta" class="form-label">Nombre del titular</label>
+              <input type="text" class="form-control" id="idnombtarjeta" required onblur="validar_nom_tarjeta()">
+              <div class="text-danger" id="mensaje_nombre_tarjeta"></div>
+            </div>
+
+            <div class="col-md-6">
+              <label for="idtarjeta" class="form-label">Numero de tarjeta</label>
+              <input type="number" class="form-control" id="idtarjeta" required min="0" onblur="validar_num_tarjeta()">
+              <div class="text-danger" id="mensaje_numero_tarjeta"></div>
+            </div>
+
+            <div class="col-md-3">
+              <label for="idfecha" class="form-label">Fecha de vencimiento</label>
+              <input type="month" class="form-control" id="idfecha" required min="2024-05" onblur="validar_fecha()">
+              <div class="text-danger" id="mensaje_fecha"></div>
+            </div>
+
+            <div class="col-md-3">
+              <label for="idcvv" class="form-label">CVV</label>
+              <input type="text" class="form-control" id="idcvv" required min="0" onblur="validar_cvv()">
+              <div class="text-danger" id="mensaje_cvv"></div>
+            </div>
+          </div>
+
+          <div>
+            <a href="{% url "carrito" %}" class="btn btn-outline-primary mt-3">Volver al carrito</a>
+            <button type="button" onclick="formulario_pagar_s()" class="btn btn-success btn-lg">Pagar</button>
+          </form>
+        </div>
+        <hr class="my-4">
+    </div>
+  </div>
+</div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.24.1/feather.min.js"
+  integrity="sha384-EbSscX4STvYAC/DxHse8z5gEDaNiKAIGW+EpfzYTfQrgIlHywXXrM9SUIZ0BlyfF" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"
+  integrity="sha384-i+dHPTzZw7YVZOx9lbH5l6lP74sLRtMtwN2XjVqjf3uAGAREAF4LMIUDTWEVs4LI" crossorigin="anonymous"></script>
+<script src='{% static "crud/js/jquery-3.7.1.min.js" %}'></script>
+<script src='{% static "crud/js/querysindex.js" %}'></script>
+<script src="{% static 'crud/js/scriptsf.js' %}?v={{ timestamp }}"></script>
+{% endblock contenido %}

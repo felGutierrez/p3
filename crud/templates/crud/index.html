@@ -1,0 +1,43 @@
+{% extends "crud/base2.html" %}
+{% load static %}
+
+
+{% block contenido %}
+
+<div class="container">
+
+    
+
+    <div class="mt-4 p-5 bg-primary text-white rounded">
+        <h1>Crud con Django</h1>
+        <p>Con lluvia.....</p>
+    </div>
+
+    <div class="border rounded mt-3 p-2">
+        <h3>Traer datos a la página</h3>
+        <p>{{fecha}}</p>
+        <p>{{msg}}</p>
+        <h5>Lista de Objetos</h5>
+        <ul>
+            {% for i in lista %}
+                <li>{{i}}</li>
+            {% endfor %}
+
+        </ul>
+        
+        <p>Cantidad de elementos: {{items}}</p>
+
+
+    </div>
+
+    <div class="row">
+        {% for categoria in categorias %}
+        <div class="col-md-3 mb-3">
+            <a href="{% url "catalogo" categoria.id %}"  class="btn btn-primary">{{ categoria.descripcion }}</a>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+{% endblock contenido %}

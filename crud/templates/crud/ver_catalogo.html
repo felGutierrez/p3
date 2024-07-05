@@ -1,0 +1,59 @@
+{% extends "crud/base2.html" %}
+{% load static %}
+
+{% block contenido %}
+<div class="row p-4">
+    <div class="album p-5">
+        <div class="container">
+            <div class="list-group-flush">
+                <div class="row col-md-3" style="float: left;">
+                    <h3>Filtro</h3>
+                    <form method="get">
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-info btn-sm text-light">Buscar</button>
+                    </form>
+                    <hr class="my-2">
+                </div>
+            </div>
+        </div>
+
+        <div class="row p-4">
+            {% for p in pagina %}
+                <div class="col-md-4">
+                    <div class="card mb-4 box-shadow">
+                        <img class="card-img-top" src="{{ p.foto.url }}" alt="foto" height="100">
+                        <div class="card-body">
+                            <p class="card-text">{{ p.nombre }}</p>
+                            <p class="card-text">${{ p.precio }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <a href="{% url "producto" p.id %}" role="button"
+                                        class="btn btn-info btn-sm text-light">Ver detalle</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="pagination">
+            <span class="step-links">
+                {% if pagina.has_previous %}
+                    <a href="?page=1{% if form.cleaned_data.rangos_precios %}{% for rango in form.cleaned_data.rangos_precios %}&rangos_precios={{ rango }}{% endfor %}{% endif %}">&laquo; Primero</a>
+                    <a href="?page={{ pagina.previous_page_number }}{% if form.cleaned_data.rangos_precios %}{% for rango in form.cleaned_data.rangos_precios %}&rangos_precios={{ rango }}{% endfor %}{% endif %}">Anterior</a>
+                {% endif %}
+        
+                <span class="current">
+                    Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}.
+                </span>
+        
+                {% if pagina.has_next %}
+                    <a href="?page={{ pagina.next_page_number }}{% if form.cleaned_data.rangos_precios %}{% for rango in form.cleaned_data.rangos_precios %}&rangos_precios={{ rango }}{% endfor %}{% endif %}">Siguiente</a>
+                    <a href="?page={{ pagina.paginator.num_pages }}{% if form.cleaned_data.rangos_precios %}{% for rango in form.cleaned_data.rangos_precios %}&rangos_precios={{ rango }}{% endfor %}{% endif %}">Último &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}

@@ -1,0 +1,78 @@
+{% extends "crud/base2.html" %}
+{% load static %}
+
+
+{% block contenido %}
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Restablecer Contraseña</h4>
+                    </div>
+                    <div class="card-body">
+                        {% if messages %}
+                        <ul>
+                            {% for message in messages %}
+                            <li style="color: red;">{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        <form method="post" class="my-4 p-4 border rounded">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit"  class="btn btn-primary">Verificar</button>
+                        </form>  
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="my-4"></div>
+
+
+{% comment %}     <!-- Bootstrap JS (requerido para los componentes de Bootstrap) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Selecciona el formulario de restablecimiento de contraseña
+        const resetPasswordForm = document.getElementById('resetPasswordForm');
+    
+        // Escucha el evento submit del formulario
+        resetPasswordForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Evita que el formulario se envíe
+    
+            // Muestra el modal de alerta
+            var confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+            confirmationModal.show();
+        });
+    
+        // Función para redirigir a index.html
+        function redirectToIndex() {
+            window.location.href = 'index.html';
+        }
+    </script>
+    
+    <!-- Modal de confirmación -->
+    <div class="modal fade" id="confirmationModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Contraseña Restablecida</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>La contraseña se ha restablecido correctamente.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="redirectToIndex()">Listo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p>  </p>
+    <p>  </p>
+ {% endcomment %}
+
+
+{% endblock contenido %}
